@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leonida Platinum — GTA VI Trophy Guide &amp; Tracker</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <div class="mark" aria-hidden="true">LP</div>
+    <div>
+      <h1>Leonida Platinum</h1>
+      <p class="sub">GTA VI &middot; PlayStation 5 &middot; all 55 trophies &middot; guide + tracker, offline</p>
+    </div>
+  </div>
+  <div class="progress" id="progressBox">
+    <div class="big"><span id="earnedCount">0</span><span class="of">/ 55 earned</span></div>
+    <div class="bar"><div id="barFill"></div></div>
+    <p class="counts" id="gradeCounts"></p>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Views">
+  <button type="button" data-view="tracker" class="active">Tracker</button>
+  <button type="button" data-view="roadmap">Roadmap to Platinum</button>
+  <button type="button" data-view="missables">Missables</button>
+</nav>
+
+<section id="view-tracker" class="view">
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="Search a trophy or mission…" aria-label="Search trophies">
+    <div class="chips" id="kindChips" role="group" aria-label="Filter by kind">
+      <button type="button" data-kind="all" class="active">All</button>
+      <button type="button" data-kind="story">Story</button>
+      <button type="button" data-kind="missable">Missable</button>
+      <button type="button" data-kind="collectibles">Collectibles</button>
+      <button type="button" data-kind="activities">Activities</button>
+      <button type="button" data-kind="online">Online</button>
+    </div>
+    <label class="sel">Grade
+      <select id="grade"><option value="all">All grades</option><option value="platinum">Platinum</option><option value="gold">Gold</option><option value="silver">Silver</option><option value="bronze">Bronze</option></select>
+    </label>
+    <label class="toggle"><input id="spoilers" type="checkbox"> Hide story spoilers</label>
+    <label class="toggle"><input id="hideEarned" type="checkbox"> Hide earned</label>
+    <button id="export" type="button">Export progress</button>
+    <label class="import">Import progress <input id="import" type="file" accept="application/json,.json"></label>
+  </div>
+  <p class="hint" id="resultCount"></p>
+  <p class="nextup" id="nextUp"></p>
+  <div class="layout">
+    <main>
+      <table>
+        <thead><tr><th class="c">✓</th><th>Trophy</th><th>Grade</th><th>Kind</th><th>Guide</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </main>
+    <aside id="detail" aria-label="Trophy guide"></aside>
+  </div>
+</section>
+
+<section id="view-roadmap" class="view" hidden>
+  <p class="lede">The road to <strong>Vice Got a Price!</strong> in six stages, built from the official trophy descriptions. Do the story first, then the stranger strands, then activities and collectibles, then the robberies — and save the 100% grind for last.</p>
+  <div id="roadmap"></div>
+</section>
+
+<section id="view-missables" class="view" hidden>
+  <p class="lede"><strong>Missable means this:</strong> the trophy is tied to a one-time story moment, a partner who is only around for a while, or a choice — so do it on your first pass. Everything else can be done any time in free roam after the story, and is marked safe. Where a step is not pinned down in the game yet, the guide says so instead of guessing.</p>
+  <div id="missableList"></div>
+</section>
+
+<footer>
+  <p><strong>Sources &amp; honesty.</strong> Every name, description and grade is the official PlayStation 5 list as Exophase and PSNProfiles published it before this guide was written (<a href="https://www.exophase.com/game/grand-theft-auto-vi-psn/trophies/">Exophase trophy list</a> · <a href="https://psnprofiles.com/trophies/43531-grand-theft-auto-vi">PSNProfiles</a>). Each guide below is written in our own words from those descriptions and names its sources beside it. GTA VI released 19 Nov 2026: no step that needs checking in the game is claimed as checked — where a place is not pinned down yet, the guide says so.</p>
+  <p>No Rockstar Games logo, artwork, box art or game screenshot is used anywhere in this guide. The look is our own. Works offline: this page loads only its own files and makes no network request.</p>
+</footer>
+<script type="module" src="app.js"></script>
+</body>
+</html>
