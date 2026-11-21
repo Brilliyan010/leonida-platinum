@@ -1,37 +1,48 @@
-// Leonida Platinum — a GTA VI trophy guide and tracker (gta6-trophy-guide-01).
-// Node 22, standard library only. The guide itself is plain static files under
-// app/ (index.html + app.js + style.css + data/trophies.json): no build step,
-// no network at run time, it opens in desktop Chrome from its own files.
-// This program hands it in: it copies app/ and screenshots/ from beside this
-// file into /output and writes /output/dossier.json with the kit's vendored
-// make.fun library (vendor/makefun-frontend.ts, left exactly as the kit ships
-// it — the scorer rebuilds the dossier with its own copy and compares bytes).
-// Outside the grader, MAKEFUN_OUTPUT_DIR stands in for /output:
-//   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
+// Leonida Platinum — entry program for make.fun's gta6-trophy-guide-01.
+// Copies app/ and screenshots/ from this repository into the output
+// directory and writes /output/dossier.json with buildDossier from
+// vendor/makefun-frontend.ts. Node 22, standard library only, no network,
+// no randomness: two runs write the same bytes.
 
-import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { buildDossier } from './vendor/makefun-frontend.ts';
+import { buildDossier } from "./vendor/makefun-frontend.ts";
+import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
-const here = fileURLToPath(new URL('.', import.meta.url));
-const out = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+const outputDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
+const repoDir = new URL(".", import.meta.url).pathname;
 
-mkdirSync(out, { recursive: true });
-cpSync(join(here, 'app'), join(out, 'app'), { recursive: true });
-mkdirSync(join(out, 'screenshots'), { recursive: true });
-if (existsSync(join(here, 'screenshots'))) {
-  cpSync(join(here, 'screenshots'), join(out, 'screenshots'), { recursive: true });
+function copyTree(name: string): void {
+  const from = join(repoDir, name);
+  const to = join(outputDir, name);
+  if (!existsSync(from)) {
+    throw new Error(`Leonida Platinum: missing ${name}/ in the repository`);
+  }
+  rmSync(to, { recursive: true, force: true });
+  cpSync(from, to, { recursive: true });
 }
 
-// The scorer's caps for this bounty (reference/gate.json): the text cap shapes
-// the dossier's bytes; the others refuse an entry the scorer would refuse
-// (more than 4 screenshots or one over 256 KiB; app/ over 993 files and
-// directories or 48 MiB — app/ counts beside /output's own 1000-entry cap,
-// its screenshots/ and dossier.json). Screenshots are named so the first by
-// name is the cover: 1-tracker.jpg (tracker + cited guide), 2-roadmap.jpg,
-// 3-missables.jpg, 4-spoilers.jpg.
-writeFileSync(
-  join(out, 'dossier.json'),
-  buildDossier(out, { text_max_bytes: 163840, screenshots: { max: 4, max_bytes: 262144 }, app_max_files: 993, app_max_bytes: 50331648 }),
+function countFiles(dir: string): number {
+  let n = 0;
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    n += e.isDirectory() ? countFiles(join(dir, e.name)) : 1;
+  }
+  return n;
+}
+
+mkdirSync(outputDir, { recursive: true });
+copyTree("app");
+copyTree("screenshots");
+
+const dossier = buildDossier(outputDir, {
+  text_max_bytes: 163840,
+  screenshots: { max: 4, max_bytes: 262144 },
+  app_max_files: 993,
+  app_max_bytes: 50331648,
+  app_path_max_bytes: 1000,
+});
+writeFileSync(join(outputDir, "dossier.json"), dossier);
+console.log(
+  `Leonida Platinum: wrote ${outputDir}/dossier.json (${dossier.length} bytes, ` +
+    `${countFiles(join(outputDir, "app"))} app files, ` +
+    `${countFiles(join(outputDir, "screenshots"))} screenshots)`,
 );
